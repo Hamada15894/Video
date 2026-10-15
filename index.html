@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cut">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0a1230">
-<title>روابط فيديو المتاجر</title>
+<title>Store Media Links</title>
 <style>
 :root{--ink:#0c1330;--ink2:#5b6483;--line:#e4e7f0;--bg:#f3f5fa;--card:#fff;--brand:#0a1230;--accent:#2a5bea;--accent2:#e9effd;--ok:#0c8a5c;--okbg:#e5f6ef;--warn:#a85a07;--warnbg:#fdf3e4;--bad:#c22a31;--badbg:#fdeced}
 *{box-sizing:border-box}html,body{margin:0}
@@ -19,7 +19,9 @@ body{background:var(--bg);color:var(--ink);font:15px/1.6 "Segoe UI",Tahoma,"Noto
 main{max-width:720px;margin:0 auto;padding:22px 16px 60px;display:grid;gap:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(12,19,48,.05),0 10px 30px rgba(12,19,48,.05);padding:22px}
 h2{font-size:16px;margin:0 0 14px}
+h3{font-size:14px;margin:18px 0 8px}
 label.l{display:block;font-weight:700;font-size:13.5px;margin:0 0 8px}
+.hint{font-weight:400;color:var(--ink2);font-size:12px}
 input[type=text],input[type=password]{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font:inherit;background:#fff;color:var(--ink);outline:none;transition:.15s}
 input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
 #store{font-size:20px;font-weight:700;padding:15px 16px}
@@ -30,22 +32,34 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
 #slugEdit.on{display:flex}
 #slugEdit span{background:#f1f3f8;border:1.5px solid var(--line);border-right:0;border-radius:12px 0 0 12px;padding:10px;color:var(--ink2);font-size:13px;white-space:nowrap}
 #slugEdit input{border-radius:0 12px 12px 0;padding:10px 12px}
-.drop{margin-top:18px;border:2px dashed #c8cfe0;border-radius:16px;padding:30px 16px;text-align:center;cursor:pointer;transition:.15s;background:#fafbfe;position:relative}
+.drop{margin-top:18px;border:2px dashed #c8cfe0;border-radius:16px;padding:28px 16px;text-align:center;cursor:pointer;transition:.15s;background:#fafbfe;position:relative}
 .drop:hover,.drop.over{border-color:var(--accent);background:var(--accent2)}
 .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
 .drop b{display:block;font-size:16px;margin-top:8px}
-.drop small{color:var(--ink2)}
-.clips{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-top:14px}
+.drop small{color:var(--ink2);display:block}
+.drop .tip{margin-top:8px;font-size:12px;color:var(--accent)}
+.clips{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:14px}
 .clip{position:relative;border-radius:12px;overflow:hidden;background:#1b2340;aspect-ratio:3/4}
 .clip img{width:100%;height:100%;object-fit:cover;display:block}
 .clip .n{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:1px 7px}
-.clip .d{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;border-radius:6px;padding:1px 6px;direction:ltr}
+.clip .d{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;border-radius:6px;padding:1px 6px;direction:ltr;display:flex;align-items:center;gap:3px}
 .clip .x{position:absolute;top:6px;left:6px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;cursor:pointer;font-size:14px;line-height:1}
+.clip.err{outline:2px solid var(--bad)}
 .clip.busy::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:sh 1.2s infinite}
 @keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 .clip.add{display:grid;place-items:center;background:#f3f5fa;border:2px dashed #c8cfe0;color:var(--ink2);cursor:pointer;font-size:12px;text-align:center}
 .clip.add input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.mode{display:none;margin-top:18px;grid-template-columns:1fr 1fr;gap:10px}
+.opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.tog{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;user-select:none;flex:1;min-width:220px}
+.tog input{display:none}
+.tog .sw{width:38px;height:22px;border-radius:99px;background:#d5dae7;position:relative;flex:none;transition:.15s}
+.tog .sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tog:has(input:checked){border-color:var(--accent);background:var(--accent2)}
+.tog:has(input:checked) .sw{background:var(--accent)}
+.tog:has(input:checked) .sw::after{left:19px}
+.tog b{display:block;font-size:13.5px}
+.tog small{color:var(--ink2);font-size:12px;display:block;line-height:1.45}
+.mode{display:none;margin-top:12px;grid-template-columns:1fr 1fr;gap:10px}
 .mode.on{display:grid}
 .opt{border:1.5px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;transition:.15s;background:#fff}
 .opt:hover{border-color:#b9c6ef}
@@ -66,7 +80,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
 .btn.wa{background:#1f9d55}
 .btn.danger{background:#fff;color:var(--bad);border:1px solid #f1c8ca}
 .alert{border-radius:12px;padding:10px 14px;font-size:13.5px;margin-top:14px;display:none}
-.alert.on{display:block}.alert.warn{background:var(--warnbg);color:var(--warn)}.alert.bad{background:var(--badbg);color:var(--bad)}.alert.ok{background:var(--okbg);color:var(--ok)}
+.alert.on{display:block}.alert.warn{background:var(--warnbg);color:var(--warn)}.alert.bad{background:var(--badbg);color:var(--bad)}.alert.ok{background:var(--okbg);color:var(--ok)}.alert.info{background:var(--accent2);color:#22408f}
 .prog{display:none;margin-top:18px}
 .prog.on{display:block}
 .prog .t{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:8px}
@@ -101,9 +115,14 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
 .quota{margin-top:14px;font-size:12px;color:var(--ink2)}.quota .bar{height:5px;margin-top:6px}
 .setup ol{padding-inline-start:20px;margin:0 0 16px;color:var(--ink2);font-size:13.5px}
 .setup ol li{margin-bottom:5px}
-.setup code{background:#f1f3f8;padding:1px 6px;border-radius:6px;direction:ltr;display:inline-block;color:var(--ink)}
+.setup code,.dns code{background:#f1f3f8;padding:1px 6px;border-radius:6px;direction:ltr;display:inline-block;color:var(--ink)}
 .grid2{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
 @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+.dns{display:none;background:#f7f8fc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:13px;color:var(--ink2)}
+.dns.on{display:block}
+.dns table{border-collapse:collapse;width:100%;direction:ltr;margin-top:8px;font-size:12.5px}
+.dns td,.dns th{border:1px solid var(--line);padding:5px 8px;text-align:left;color:var(--ink)}
+.dns th{background:#eef1f7}
 .hidden{display:none!important}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:20}
 .toast.on{opacity:1;transform:translateX(-50%)}
@@ -117,60 +136,79 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
 <body>
 <header class="top"><div class="top-in">
   <div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></div>
-  <h1>روابط فيديو المتاجر</h1>
-  <button class="gear" id="btnSettings" type="button" title="الإعدادات"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  <h1>Store Media Links</h1>
+  <button class="gear" id="btnSettings" type="button" title="Settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </div></header>
 
 <main>
   <section class="card setup hidden" id="setupCard">
-    <h2>الإعداد — مرة وحدة بس</h2>
-    <ol>
-      <li>افتح <code>github.com/settings/tokens/new</code></li>
+    <h2>Settings</h2>
+    <div id="tokWrap"><ol>
+      <li>Open <code>github.com/settings/tokens/new</code></li>
       <li>Note: <code>video-links</code> · Expiration: <code>No expiration</code></li>
-      <li>فعّل <code>repo</code> ← <b>Generate token</b> ← انسخ الكود</li>
+      <li>Tick <code>repo</code> → <b>Generate token</b> → copy it</li>
     </ol>
     <div class="grid2">
-      <div><label class="l">كود GitHub</label><input type="password" id="token" placeholder="ghp_..." autocomplete="off" dir="ltr"></div>
-      <div><label class="l">المستودع</label><input type="text" id="repo" value="v" dir="ltr"></div>
+      <div><label class="l">GitHub token</label><input type="password" id="token" placeholder="ghp_..." autocomplete="off" dir="ltr"></div>
+      <div><label class="l">Repository</label><input type="text" id="repo" value="v" dir="ltr"></div>
+    </div></div>
+    <label class="l">Custom domain <span class="hint">(removes GitHub and the account name from links)</span></label>
+    <input type="text" id="domain" placeholder="e.g. storevideo.net" dir="ltr">
+    <div class="dns" id="dnsBox">
+      In your domain panel (Namecheap / GoDaddy…) → DNS, add these records and remove any old A records:
+      <table><tr><th>Type</th><th>Host</th><th>Value</th></tr>
+        <tr><td>A</td><td>@</td><td>185.199.108.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.109.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.110.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.111.153</td></tr>
+        <tr><td>CNAME</td><td>www</td><td id="dnsCname">…github.io</td></tr>
+      </table>
+      <div style="margin-top:8px">After saving, it takes 1–24 hours for the domain and its secure lock (https) to go live. Older links redirect to it automatically.</div>
     </div>
-    <label class="l">اسم يظهر أسفل صفحة الفيديو (اختياري)</label>
+    <label class="l" style="margin-top:14px">Footer text on the page <span class="hint">(optional)</span></label>
     <input type="text" id="org" placeholder="Modern Trade – Northern Region">
-    <button class="btn big" id="btnSetup" type="button">تفعيل</button>
+    <button class="btn big" id="btnSetup" type="button">Save</button>
     <div class="alert" id="setupMsg"></div>
   </section>
 
   <section class="card hidden" id="upCard">
-    <label class="l" for="store">اسم المتجر</label>
+    <label class="l" for="store">Store name</label>
     <input type="text" id="store" placeholder="Othaim 56" autocomplete="off">
     <div class="preview" id="preview"></div>
     <div id="slugEdit"><span id="basePrefix"></span><input type="text" id="slug"></div>
 
     <div class="drop" id="drop">
-      <input type="file" id="file" accept="video/*" multiple>
+      <input type="file" id="file" accept="video/*,image/*" multiple>
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2a5bea" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M20 16v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3"/></svg>
-      <b>أرفق الفيديوهات</b>
-      <small>فيديو واحد أو أكثر · MP4</small>
+      <b>Attach videos or photos</b>
+      <small>One or more · MP4 video or JPG / PNG photos</small>
+      <div class="tip">For best quality, upload the original from your phone gallery, not from WhatsApp</div>
     </div>
     <div class="clips hidden" id="clips"></div>
+
+    <div class="opts">
+      <label class="tog"><input type="checkbox" id="enh" checked><span class="sw"></span>
+        <span><b>✨ Enhance quality</b><small>Photos: sharpen, upscale and colour-correct · Videos: full original quality with colour and clarity tuning on playback</small></span></label>
+    </div>
 
     <div class="mode" id="mode">
       <label class="opt"><input type="radio" name="mode" value="playlist" checked>
         <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h12M3 12h12M3 18h8"/><path d="M17 15l5 3-5 3z" fill="currentColor"/></svg></span>
-        <span><b>رابط واحد متواصل</b><small>كل الفيديوهات في رابط واحد، وتشتغل ورا بعض</small></span></label>
+        <span><b>One link for all</b><small>All files on one link, playing one after another</small></span></label>
       <label class="opt"><input type="radio" name="mode" value="single">
         <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-        <span><b>رابط لكل فيديو</b><small>كل فيديو له رابطه الخاص</small></span></label>
+        <span><b>A link per file</b><small>Each video or photo gets its own link</small></span></label>
     </div>
 
     <div class="alert" id="upMsg"></div>
-    <button class="btn big" id="btnGo" type="button" disabled>إنشاء الرابط</button>
+    <button class="btn big" id="btnGo" type="button" disabled>Create link</button>
 
-    <div class="prog" id="prog"><div class="t"><span id="progT">جاري الرفع…</span><span id="progP">0%</span></div><div class="bar"><div id="progBar"></div></div></div>
+    <div class="prog" id="prog"><div class="t"><span id="progT">Uploading…</span><span id="progP">0%</span></div><div class="bar"><div id="progBar"></div></div></div>
     <div class="res" id="res"></div>
   </section>
 
   <section class="card hidden" id="libCard">
-    <div class="libhead"><h2>الروابط المحفوظة</h2><input type="text" id="q" placeholder="بحث…"></div>
+    <div class="libhead"><h2>Saved links</h2><input type="text" id="q" placeholder="Search…"></div>
     <div class="lib" id="lib"></div>
     <div class="quota"><span id="quotaTxt"></span><div class="bar"><div id="quotaBar"></div></div></div>
   </section>
@@ -180,27 +218,32 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
 <div class="toast" id="toast"></div>
 
 <script>
-const SELF_HTML = '<!doctype html>\n' + document.documentElement.outerHTML;
+const EMBED = 'OVdxQTkyZ0YzNHZnSDMwWHM4SlA0eGp0a2V5UjJ3R1BVYzV6X3BoZw==';
+const SELF_HTML = ('<!doctype html>\n' + document.documentElement.outerHTML).replace("const EMBED = '" + EMBED + "';", "const EMBED = '';");
+const embTok = () => { try{ return EMBED ? atob(EMBED).split('').reverse().join('') : ''; }catch(e){ return ''; } };
 const $ = id => document.getElementById(id);
-const MAX_MB = 75, SITE_LIMIT = 1024 ** 3;
+const MAX_VMB = 75, MAX_IMB = 30, SITE_LIMIT = 1024 ** 3;
 const mem = {};
 const LS = { get:(k,d='')=>{ try{ return localStorage.getItem('vl_'+k) ?? d }catch(e){ return mem[k] ?? d } }, set:(k,v)=>{ try{ localStorage.setItem('vl_'+k,v) }catch(e){ mem[k]=v } } };
-let cfg = { token: LS.get('token'), repo: LS.get('repo','v'), owner: LS.get('owner'), org: LS.get('org') };
+let cfg = { token: LS.get('token') || embTok(), repo: LS.get('repo','v'), owner: LS.get('owner'), org: LS.get('org'), domain: LS.get('domain') };
 let manifest = { pages: [] };
-let clips = []; // {file, poster, posterUrl, w, h, dur, ready}
+let clips = []; // {file, kind:'v'|'i', thumb, thumbUrl, w, h, dur, ready, ok}
 let slugTouched = false, busy = false;
 
-const base = () => `https://${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/`;
-const short = () => `${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/`;
+const host = () => cfg.domain || `${cfg.owner.toLowerCase()}.github.io/${cfg.repo}`;
+const base = () => `https://${host()}/`;
+const short = () => `${host()}/`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LRI = s => '⁦' + s + '⁩';
 const fmtMB = b => LRI((b/1048576).toFixed(b < 10485760 ? 1 : 0) + ' MB');
 const fmtDur = s => !s || !isFinite(s) ? '' : `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const mode = () => clips.length > 1 ? document.querySelector('input[name=mode]:checked').value : 'playlist';
+const isImg = f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name);
+const isVid = f => /^video\//.test(f.type) || /\.(mp4|mov|m4v|webm|3gp)$/i.test(f.name);
 function toast(t){ const e=$('toast'); e.textContent=t; e.classList.add('on'); clearTimeout(toast.t); toast.t=setTimeout(()=>e.classList.remove('on'),1800) }
 function msg(id, t, k){ const e=$(id); e.className = t ? 'alert on '+k : 'alert'; e.textContent = t || '' }
-async function copy(t){ try{ await navigator.clipboard.writeText(t) }catch(e){ const a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove() } toast('تم النسخ ✓') }
+async function copy(t){ try{ await navigator.clipboard.writeText(t) }catch(e){ const a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove() } toast('Copied ✓') }
 function ask(title, text, buttons){
   return new Promise(res => {
     $('mT').textContent = title; $('mP').textContent = text;
@@ -209,7 +252,6 @@ function ask(title, text, buttons){
     $('mA').onclick = e => { const b = e.target.closest('button'); if (!b) return; $('modal').classList.remove('on'); res(buttons[b.dataset.i].value); };
   });
 }
-
 const AR = {'ا':'a','أ':'a','إ':'i','آ':'a','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh','د':'d','ذ':'th','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','ة':'a','و':'w','ؤ':'o','ي':'y','ى':'a','ئ':'e','ء':''};
 function slugify(s){
   return s.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[؀-ۿ]/g, c => AR[c] ?? '')
@@ -233,7 +275,7 @@ function blobXHR(b64, onP){
     x.setRequestHeader('Authorization','Bearer '+cfg.token); x.setRequestHeader('Accept','application/vnd.github+json'); x.setRequestHeader('Content-Type','application/json');
     x.upload.onprogress = e => e.lengthComputable && onP && onP(e.loaded/e.total);
     x.onload = () => { let j={}; try{ j=JSON.parse(x.responseText) }catch(e){} x.status<300 ? res(j.sha) : rej(Object.assign(new Error(j.message||'HTTP '+x.status),{status:x.status})) };
-    x.onerror = () => rej(new Error('انقطع الاتصال أثناء الرفع'));
+    x.onerror = () => rej(new Error('Connection lost during upload'));
     x.send(JSON.stringify({ content:b64, encoding:'base64' }));
   });
 }
@@ -258,177 +300,324 @@ async function loadManifest(){
   }catch(e){ if (e.status === 404) manifest = { pages: [] }; else throw e; }
 }
 const saveManifest = async () => ({ path:'videos.json', sha: await textBlob(JSON.stringify(manifest, null, 1)) });
+async function fileExists(p){ try{ await gh(R()+'/contents/'+p+'?ref=main'); return true; }catch(e){ if (e.status === 404) return false; throw e; } }
+
+/* ---------- Neutral pages (no names anywhere) ---------- */
+const plainPage = (title, text) => `<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${title}</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#080d1f;color:#cfd6ee;font:16px/1.6 "Segoe UI",Tahoma,Arial,sans-serif;text-align:center;padding:20px}b{display:block;font-size:22px;color:#fff;margin-bottom:6px}</style></head>
+<body><div><b>${title}</b>${text}</div></body></html>`;
 
 /* ---------- Setup ---------- */
 async function setup(){
   const btn = $('btnSetup');
   cfg.token = $('token').value.trim(); cfg.repo = ($('repo').value.trim() || 'v').replace(/[^A-Za-z0-9._-]/g,''); cfg.org = $('org').value.trim();
-  if (!cfg.token) return msg('setupMsg','الصق كود GitHub','warn');
-  btn.disabled = true; btn.textContent = 'جاري التفعيل…'; msg('setupMsg');
+  const newDomain = $('domain').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+  if (!cfg.token) return msg('setupMsg','Paste your GitHub token','warn');
+  if (newDomain && !/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(newDomain)) return msg('setupMsg','Invalid domain — example: storevideo.net','warn');
+  btn.disabled = true; btn.textContent = 'Saving…'; msg('setupMsg');
   try{
     cfg.owner = (await gh('/user')).login;
     let exists = true; try{ await gh(R()) }catch(e){ if (e.status === 404) exists = false; else throw e; }
     if (!exists){
-      await gh('/user/repos', {method:'POST', body:{ name:cfg.repo, auto_init:true, description:'Store video links', homepage:base() }});
+      await gh('/user/repos', {method:'POST', body:{ name:cfg.repo, auto_init:true, description:'Store media links' }});
       for (let i = 0; i < 15; i++){ try{ await gh(R()+'/git/ref/heads/main'); break; }catch(e){ await sleep(1500); } }
     }
     await loadManifest();
-    await commit([
-      { path:'index.html', sha: await textBlob(SELF_HTML) },
+    const entries = [
+      { path:'app/index.html', sha: await textBlob(SELF_HTML) },
+      { path:'index.html', sha: await textBlob(plainPage('Store media', 'Please open the full link you received.')) },
+      { path:'404.html', sha: await textBlob(plainPage('Link not found', 'Check the link or ask for a new one.')) },
       { path:'.nojekyll', sha: await textBlob('') },
       { path:'robots.txt', sha: await textBlob('User-agent: *\nDisallow: /\n') },
       await saveManifest()
-    ], 'Setup');
-    try{ await gh(R()+'/pages') }catch(e){ if (e.status !== 404) throw e;
-      try{ await gh(R()+'/pages', {method:'POST', body:{ source:{ branch:'main', path:'/' } }}) }catch(e2){ if (e2.status !== 409) throw e2; } }
-    ['token','repo','owner','org'].forEach(k => LS.set(k, cfg[k]));
-    showApp(); toast('تم التفعيل ✓');
+    ];
+    if (newDomain) entries.push({ path:'CNAME', sha: await textBlob(newDomain + '\n') });
+    else if (await fileExists('CNAME')) entries.push({ path:'CNAME', sha:null });
+    await commit(entries, 'Setup');
+    let pages = null; try{ pages = await gh(R()+'/pages') }catch(e){ if (e.status !== 404) throw e; }
+    if (!pages){ try{ await gh(R()+'/pages', {method:'POST', body:{ source:{ branch:'main', path:'/' } }}) }catch(e2){ if (e2.status !== 409) throw e2; } }
+    if ((pages?.cname || '') !== newDomain){ try{ await gh(R()+'/pages', {method:'PUT', body:{ cname: newDomain || null }}) }catch(e){ console.warn(e); } }
+    cfg.domain = newDomain;
+    ['token','repo','owner','org','domain'].forEach(k => LS.set(k, cfg[k])); msg('upMsg');
+    LS.set('https_ok', '');
+    $('setupCard').classList.add('hidden');
+    showApp(); toast('Saved ✓');
   }catch(e){
-    msg('setupMsg', e.status === 401 ? 'الكود غير صحيح أو منتهي' : (e.status === 403 || e.status === 404) ? 'الكود ما عنده صلاحية repo' : 'خطأ: ' + e.message, 'bad');
-  }finally{ btn.disabled = false; btn.textContent = 'تفعيل'; }
+    cfg.owner = LS.get('owner'); $('setupCard').classList.remove('hidden');
+    msg('setupMsg', e.status === 401 ? 'Token is invalid or expired' : (e.status === 403 || e.status === 404) ? 'Token is missing the repo permission' : 'Error: ' + e.message, 'bad');
+  }finally{ btn.disabled = false; btn.textContent = 'Save'; }
+}
+async function tryHttps(){
+  if (!cfg.domain || LS.get('https_ok')) return;
+  try{ await gh(R()+'/pages', {method:'PUT', body:{ cname: cfg.domain, https_enforced: true }}); LS.set('https_ok','1'); }catch(e){}
 }
 
-/* ---------- Clips ---------- */
-function analyze(file){
+/* ---------- Media analysis ---------- */
+function analyzeVideo(file){
   return new Promise(res => {
-    const v = document.createElement('video'), url = URL.createObjectURL(file), out = { w:0, h:0, dur:0, poster:null, ok:false };
+    const v = document.createElement('video'), url = URL.createObjectURL(file), out = { w:0, h:0, dur:0, thumb:null, ok:false };
     let done = false; const fin = () => { if (done) return; done = true; URL.revokeObjectURL(url); res(out); };
     v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = url;
     v.onloadedmetadata = () => { out.w = v.videoWidth; out.h = v.videoHeight; out.dur = v.duration; out.ok = out.w > 0; v.currentTime = Math.min(1.2, (v.duration||2)/3); };
     v.onseeked = () => { try{
-      const s = Math.min(1, 720/Math.max(v.videoWidth, v.videoHeight)), c = document.createElement('canvas');
+      const s = Math.min(1, 1080/Math.max(v.videoWidth, v.videoHeight)), c = document.createElement('canvas');
       c.width = Math.round(v.videoWidth*s); c.height = Math.round(v.videoHeight*s); c.getContext('2d').drawImage(v,0,0,c.width,c.height);
-      c.toBlob(b => { out.poster = b; fin(); }, 'image/jpeg', .82);
+      c.toBlob(b => { out.thumb = b; fin(); }, 'image/jpeg', .88);
     }catch(e){ fin(); } };
-    v.onerror = fin; setTimeout(fin, 12000);
+    v.onerror = fin; setTimeout(fin, 15000);
   });
 }
+async function loadBitmap(file){
+  try{ return await createImageBitmap(file, { imageOrientation:'from-image' }); }catch(e){}
+  return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error('img')); im.src = URL.createObjectURL(file); });
+}
+const toBlob = (c, q) => new Promise(r => c.toBlob(r, 'image/jpeg', q));
+async function analyzeImage(file){
+  try{
+    const bm = await loadBitmap(file); const w = bm.width, h = bm.height;
+    const s = Math.min(1, 480/Math.max(w,h)), c = document.createElement('canvas');
+    c.width = Math.round(w*s); c.height = Math.round(h*s);
+    const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(bm, 0, 0, c.width, c.height);
+    return { w, h, ok:true, thumb: await toBlob(c, .85) };
+  }catch(e){ return { ok:false }; }
+}
+/* Photo enhancement: smart upscale, auto-levels, vibrance, sharpening */
+async function enhanceImage(file){
+  const bm = await loadBitmap(file);
+  const w0 = bm.width, h0 = bm.height, L = Math.max(w0, h0);
+  const scale = L < 1600 ? Math.min(2, 2400/L) : Math.min(1, 3200/L);
+  const W = Math.round(w0*scale), H = Math.round(h0*scale);
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d', { willReadFrequently:true }); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  if (scale > 1.2){ // two-step upscale = smoother edges
+    const m = document.createElement('canvas'); m.width = Math.round(w0*scale/1.4); m.height = Math.round(h0*scale/1.4);
+    const mx = m.getContext('2d'); mx.imageSmoothingQuality = 'high'; mx.drawImage(bm, 0, 0, m.width, m.height);
+    x.drawImage(m, 0, 0, W, H);
+  } else x.drawImage(bm, 0, 0, W, H);
+  await sleep(0);
+  const img = x.getImageData(0, 0, W, H), d = img.data, n = W*H;
+  // per-channel levels from histogram (0.3% / 99.7%), limited so colours never get blown
+  const hist = [new Uint32Array(256), new Uint32Array(256), new Uint32Array(256)];
+  for (let i = 0; i < d.length; i += 16){ hist[0][d[i]]++; hist[1][d[i+1]]++; hist[2][d[i+2]]++; }
+  const total = Math.ceil(n/4), lut = [];
+  for (let ch = 0; ch < 3; ch++){
+    let a = 0, lo = 0, hi = 255;
+    for (let v = 0; v < 256; v++){ a += hist[ch][v]; if (a > total*.003){ lo = v; break; } }
+    a = 0; for (let v = 255; v >= 0; v--){ a += hist[ch][v]; if (a > total*.003){ hi = v; break; } }
+    lo = Math.min(lo, 28); hi = Math.max(hi, 228);
+    const t = new Uint8ClampedArray(256); for (let v = 0; v < 256; v++) t[v] = (v - lo) * 255 / (hi - lo);
+    lut.push(t);
+  }
+  const VIB = 0.14;
+  for (let i = 0; i < d.length; i += 4){
+    let r = lut[0][d[i]], g = lut[1][d[i+1]], b = lut[2][d[i+2]];
+    const mx = Math.max(r,g,b), mn = Math.min(r,g,b), l = .299*r + .587*g + .114*b;
+    const k = 1 + VIB * (1 - (mx - mn)/255); // boost dull colours more than vivid ones
+    d[i] = l + (r-l)*k; d[i+1] = l + (g-l)*k; d[i+2] = l + (b-l)*k;
+  }
+  await sleep(0);
+  // unsharp (3x3 laplacian), stronger when upscaled
+  const A = scale > 1.2 ? .42 : .26, src = new Uint8ClampedArray(d), row = W*4;
+  for (let y = 1; y < H-1; y++){
+    for (let xx = 1; xx < W-1; xx++){
+      const i = y*row + xx*4;
+      for (let ch = 0; ch < 3; ch++){
+        const p = i + ch;
+        d[p] = src[p]*(1+4*A) - A*(src[p-4] + src[p+4] + src[p-row] + src[p+row]);
+      }
+    }
+    if ((y & 255) === 0) await sleep(0);
+  }
+  x.putImageData(img, 0, 0);
+  return { blob: await toBlob(c, .93), w: W, h: H };
+}
+
+/* ---------- Clips ---------- */
 async function addFiles(list){
   if (busy) return;
   msg('upMsg');
-  const files = [...list].filter(f => /^video\//.test(f.type) || /\.(mp4|mov|m4v|webm|3gp)$/i.test(f.name));
-  const big = files.filter(f => f.size > MAX_MB*1048576);
-  if (big.length) msg('upMsg', `تم تجاهل ${big.length} فيديو أكبر من ${MAX_MB} ميجا. أرسله لنفسك في الواتساب وحمّله من هناك عشان يصغر حجمه.`, 'warn');
-  const fresh = files.filter(f => f.size <= MAX_MB*1048576).map(file => ({ file, ready:false }));
+  const files = [...list].filter(f => isVid(f) || isImg(f));
+  const skipped = files.filter(f => isVid(f) ? f.size > MAX_VMB*1048576 : f.size > MAX_IMB*1048576);
+  if (skipped.length) msg('upMsg', `${skipped.length} file(s) skipped — too large (videos up to ${MAX_VMB} MB, photos up to ${MAX_IMB} MB).`, 'warn');
+  const fresh = files.filter(f => !skipped.includes(f)).map(file => ({ file, kind: isImg(file) && !isVid(file) ? 'i' : 'v', ready:false }));
   clips.push(...fresh); renderClips();
-  for (const c of fresh){ Object.assign(c, await analyze(c.file), { ready:true }); if (c.poster) c.posterUrl = URL.createObjectURL(c.poster); renderClips(); }
-  const bad = clips.filter(c => c.ready && (!c.ok || !/mp4|m4v/i.test(c.file.type + c.file.name)));
-  if (bad.length && !big.length) msg('upMsg', 'تنبيه: فيه فيديو مو MP4 (مثلاً من كاميرا الآيفون)، ويمكن ما يشتغل على بعض أجهزة ويندوز. الأضمن ترسله في الواتساب وتحمّله من هناك.', 'warn');
+  for (const c of fresh){
+    Object.assign(c, c.kind === 'v' ? await analyzeVideo(c.file) : await analyzeImage(c.file), { ready:true });
+    if (c.thumb) c.thumbUrl = URL.createObjectURL(c.thumb);
+    renderClips();
+  }
+  const badImg = clips.filter(c => c.ready && c.kind === 'i' && !c.ok);
+  const badVid = clips.filter(c => c.ready && c.kind === 'v' && (!c.ok || !/mp4|m4v/i.test(c.file.type + c.file.name)));
+  if (badImg.length) msg('upMsg', `${badImg.length} photo(s) could not be read (usually iPhone HEIC). Remove them, or set the iPhone camera format to "Most Compatible".`, 'bad');
+  else if (badVid.length && !skipped.length) msg('upMsg', 'Note: one video is not MP4 (e.g. iPhone MOV) and may not play on some Windows laptops. Sending it through WhatsApp and saving it converts it to MP4.', 'warn');
 }
 function renderClips(){
   const el = $('clips');
   $('drop').classList.toggle('hidden', clips.length > 0); el.classList.toggle('hidden', !clips.length);
-  el.innerHTML = clips.map((c,i) => `<div class="clip ${c.ready?'':'busy'}">${c.posterUrl ? `<img src="${c.posterUrl}" alt="">` : ''}<span class="n">${i+1}</span>${c.dur ? `<span class="d">${fmtDur(c.dur)}</span>` : ''}${busy ? '' : `<button class="x" data-i="${i}" type="button" title="حذف">×</button>`}</div>`).join('')
-    + (busy ? '' : `<label class="clip add"><input type="file" accept="video/*" multiple><span>＋<br>إضافة</span></label>`);
+  el.innerHTML = clips.map((c,i) => `<div class="clip ${c.ready?'':'busy'} ${c.ready && !c.ok && c.kind==='i' ? 'err' : ''}">${c.thumbUrl ? `<img src="${c.thumbUrl}" alt="">` : ''}<span class="n">${i+1}</span>${c.kind==='v' ? `<span class="d">▶ ${fmtDur(c.dur)}</span>` : `<span class="d">Photo</span>`}${busy ? '' : `<button class="x" data-i="${i}" type="button" title="Remove">×</button>`}</div>`).join('')
+    + (busy ? '' : `<label class="clip add"><input type="file" accept="video/*,image/*" multiple><span>＋<br>Add</span></label>`);
   $('mode').classList.toggle('on', clips.length > 1);
   validate();
 }
 function validate(){
   const s = $('store').value.trim(), slug = $('slug').value;
-  $('btnGo').disabled = busy || !s || !clips.length || clips.some(c => !c.ready) || !/^[a-z0-9][a-z0-9-]*$/.test(slug);
+  $('btnGo').disabled = busy || !s || !clips.length || clips.some(c => !c.ready || (c.kind === 'i' && !c.ok)) || !/^[a-z0-9][a-z0-9-]*$/.test(slug);
   const n = clips.length;
-  $('btnGo').textContent = n > 1 && mode() === 'single' ? `إنشاء ${n} روابط` : 'إنشاء الرابط';
-  $('preview').innerHTML = s && cfg.owner ? (slug ? `الرابط: <b>${esc(short()+slug)}${n>1 && mode()==='single' ? '-1, -2…' : ''}</b> <button type="button" id="editSlug">تعديل</button>` : `<span style="color:var(--warn)">اكتب الرابط بالإنجليزي</span> <button type="button" id="editSlug">تعديل</button>`) : '';
+  $('btnGo').textContent = n > 1 && mode() === 'single' ? `Create ${n} links` : 'Create link';
+  $('preview').innerHTML = s && cfg.owner ? (slug ? `Link: <b>${esc(short()+slug)}${n>1 && mode()==='single' ? '-1, -2…' : ''}</b> <button type="button" id="editSlug">Edit</button>` : `<span style="color:var(--warn)">Type the link in English letters</span> <button type="button" id="editSlug">Edit</button>`) : '';
 }
 
 /* ---------- Store page ---------- */
 function pageHTML(p){
-  const url = base() + p.slug + '/', many = p.clips.length > 1, total = p.clips.reduce((a,c) => a + (c.dur||0), 0);
-  const date = new Date(p.date).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn', { year:'numeric', month:'long', day:'numeric' });
-  const C = p.clips.map(c => ({ f: c.f + '?v=' + p.ver, p: c.p ? c.p + '?v=' + p.ver : '', d: c.dur || 0, w: c.w || 9, h: c.h || 16 }));
-  const first = C[0], dl = s => `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
-  const sub = many ? `${p.clips.length} مقاطع · ${dl(total)}` : (total ? dl(total) : '');
+  const url = base() + p.slug + '/';
+  const items = p.clips.map(c => ({ t: c.t || 'v', f: c.f + '?v=' + p.ver, p: c.p ? c.p + '?v=' + p.ver : '', d: c.dur || 0, w: c.w || 9, h: c.h || 16 }));
+  const nV = items.filter(i => i.t === 'v').length, nI = items.length - nV, N = items.length, first = items[0];
+  const total = items.reduce((a,c) => a + c.d, 0);
+  const dl = s => `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+  const date = new Date(p.date).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  const parts = []; if (nV) parts.push(nV === 1 ? '1 video' : `${nV} videos`); if (nI) parts.push(nI === 1 ? '1 photo' : `${nI} photos`);
+  const sub = parts.join(' · ');
+  const kicker = nV && nI ? 'Store media' : nI ? (N > 1 ? 'Store photos' : 'Store photo') : (N > 1 ? 'Store videos' : 'Store video');
+  const ogImg = first.t === 'i' ? first.f : first.p;
+  let vi = 0, ii = 0;
+  const labels = items.map(c => c.t === 'v' ? `Video ${++vi}` : `Photo ${++ii}`);
+  const icV = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  const icI = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="M21 15l-5-5L5 21"/></svg>';
+  const card = (c, i) => `
+  <section class="card" id="m${i+1}">
+    <div class="ch">
+      <span class="tag ${c.t}">${c.t === 'v' ? icV : icI}${labels[i]}</span>
+      <span class="num">${i+1} / ${N}</span>
+      ${c.t === 'v' && c.d ? `<span class="dur">${dl(c.d)}</span>` : ''}
+    </div>
+    <div class="media" style="aspect-ratio:${c.w}/${c.h}">
+      ${c.t === 'v'
+        ? `<video controls playsinline preload="metadata"${c.p ? ` poster="${c.p}"` : ''} src="${c.f}"></video>`
+        : `<img src="${c.f}" alt="${esc(p.name)} – ${labels[i]}" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async" data-i="${i}">`}
+    </div>
+    <div class="cf">
+      <button type="button" class="fs" data-i="${i}">⤢ Full screen</button>
+      <a href="${c.f}" target="_blank" rel="noopener">Open</a>
+      <a href="${c.f}" download="${esc(p.slug)}-${i+1}.${c.t === 'v' ? 'mp4' : (c.f.split('?')[0].split('.').pop())}">Download</a>
+    </div>
+  </section>`;
   return `<!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>${esc(p.name)}</title>
-<meta property="og:type" content="video.other">
+<meta property="og:type" content="${nV ? 'video.other' : 'website'}">
 <meta property="og:title" content="${esc(p.name)}">
-<meta property="og:description" content="${many ? p.clips.length + ' مقاطع فيديو — اضغط للمشاهدة' : 'فيديو المتجر — اضغط للمشاهدة'}">
+<meta property="og:description" content="${esc(sub)} — tap to view">
 <meta property="og:url" content="${url}">
-${first.p ? `<meta property="og:image" content="${url}${first.p}">\n<meta name="twitter:card" content="summary_large_image">` : ''}
-<meta property="og:video" content="${url}${first.f}">
-<meta property="og:video:type" content="video/mp4">
+${ogImg ? `<meta property="og:image" content="${url}${ogImg}">\n<meta name="twitter:card" content="summary_large_image">` : ''}
+${first.t === 'v' ? `<meta property="og:video" content="${url}${first.f}">\n<meta property="og:video:type" content="video/mp4">` : ''}
 <style>
-*{box-sizing:border-box}html,body{margin:0}
-body{background:#080d1f;color:#fff;font:15px/1.55 "Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
-.w{max-width:600px;margin:0 auto;padding:24px 16px 28px}
-.k{font-size:11.5px;letter-spacing:.12em;color:#8ea3e6;display:flex;align-items:center;gap:8px;text-transform:uppercase}
+*{box-sizing:border-box}html,body{margin:0}html{scroll-behavior:smooth}
+body{background:#070b1a;color:#fff;font:15px/1.55 "Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+.hd{max-width:1180px;margin:0 auto;padding:28px 20px 6px}
+.k{font-size:11.5px;letter-spacing:.14em;color:#8ea3e6;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-weight:600}
 .k i{width:7px;height:7px;border-radius:50%;background:#4f7cff;box-shadow:0 0 0 4px rgba(79,124,255,.18)}
-h1{margin:8px 0 2px;font-size:30px;line-height:1.2;font-weight:800;unicode-bidi:plaintext;text-align:start}
-.m{color:#9aa3c2;font-size:13px;display:flex;gap:10px;flex-wrap:wrap}
-.m span+span::before{content:"·";margin-inline-end:10px;color:#4b5578}
-.st{margin-top:18px;position:relative;width:100%;background:#000;border-radius:18px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06)}
-video{display:block;width:100%;max-height:74vh;aspect-ratio:${first.w}/${first.h};background:#000;object-fit:contain}
-.ctr{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);border-radius:99px;padding:3px 11px;font-size:12px;font-weight:700;direction:ltr;pointer-events:none}
-.nav{display:flex;gap:8px;margin-top:12px}
-.nav button{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:12px;padding:11px;font:inherit;font-weight:700;cursor:pointer}
-.nav button:disabled{opacity:.35;cursor:default}
-.nav button:not(:disabled):hover{background:rgba(255,255,255,.12)}
-.ls{margin-top:16px;display:grid;gap:8px}
-.it{display:flex;gap:12px;align-items:center;padding:8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);cursor:pointer;color:#dfe5f7;text-decoration:none;transition:.15s}
-.it:hover{background:rgba(255,255,255,.08)}
-.it.on{background:rgba(79,124,255,.16);border-color:rgba(79,124,255,.55)}
-.it .th{width:54px;height:54px;border-radius:10px;background:#1a2242 center/cover;flex:none;position:relative}
-.it.on .th::after{content:"";position:absolute;inset:0;border-radius:10px;background:rgba(42,91,234,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center no-repeat}
-.it b{display:block;font-size:14px}
-.it small{color:#8f99ba;font-size:12px;direction:ltr;display:inline-block}
-.it .go{margin-inline-start:auto;color:#8ea3e6;font-size:12px;white-space:nowrap}
-.fb{margin-top:14px;text-align:center;font-size:12.5px;color:#7a84a6}
-.fb a{color:#9db4ff}
-footer{text-align:center;color:#5f6a8f;font-size:12px;padding:6px 16px 22px}
+h1{margin:8px 0 4px;font-size:clamp(26px,4vw,36px);line-height:1.15;font-weight:800;unicode-bidi:plaintext;text-align:start;letter-spacing:-.01em}
+.m{color:#9aa3c2;font-size:14px;display:flex;gap:10px;flex-wrap:wrap}
+.m span+span::before{content:"·";margin-right:10px;color:#4b5578}
+.jump{position:sticky;top:0;z-index:5;background:rgba(7,11,26,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06);margin-top:16px}
+.jump-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.jump-in::-webkit-scrollbar{display:none}
+.jump a{flex:none;display:flex;align-items:center;gap:6px;color:#cfd6ee;text-decoration:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);transition:.15s}
+.jump a:hover,.jump a.on{background:#2a5bea;border-color:#2a5bea;color:#fff}
+.grid{max-width:1180px;margin:0 auto;padding:20px;display:grid;gap:22px;grid-template-columns:${N === 1 ? 'minmax(0,640px)' : 'repeat(auto-fill,minmax(min(100%,340px),1fr))'};justify-content:center;align-items:start}
+.card{background:#0e1430;border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.35);scroll-margin-top:70px}
+.ch{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 10px 4px 9px;border-radius:99px}
+.tag.v{background:rgba(42,91,234,.18);color:#9db4ff}
+.tag.i{background:rgba(16,185,129,.15);color:#6ee7b7}
+.num{margin-left:auto;font-size:12px;color:#7f89ab;font-weight:600}
+.dur{font-size:12px;color:#cfd6ee;background:rgba(255,255,255,.07);border-radius:6px;padding:1px 7px}
+.media{position:relative;background:#000;width:100%;max-height:78vh;display:grid;place-items:center;overflow:hidden}
+.media video,.media img{width:100%;height:100%;max-height:78vh;object-fit:contain;display:block;background:#000}
+.media img{cursor:zoom-in;image-rendering:auto}
+${p.enh ? '.media video{filter:contrast(1.07) saturate(1.16) brightness(1.03)}' : ''}
+.cf{display:flex;gap:6px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.06)}
+.cf button,.cf a{flex:1;text-align:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#dfe5f7;border-radius:10px;padding:8px 6px;font:inherit;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:.15s}
+.cf button:hover,.cf a:hover{background:rgba(255,255,255,.11);color:#fff}
+.lb{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.96);display:none;align-items:center;justify-content:center}
+.lb.on{display:flex}
+.lb img{max-width:100vw;max-height:100vh;object-fit:contain;user-select:none}
+.lb button{position:absolute;background:rgba(255,255,255,.1);border:0;color:#fff;width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer;display:grid;place-items:center}
+.lb button:hover{background:rgba(255,255,255,.2)}
+.lb .x{top:16px;right:16px}.lb .pv{left:16px;top:50%;transform:translateY(-50%)}.lb .nx{right:16px;top:50%;transform:translateY(-50%)}
+.lb .c{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.1);border-radius:99px;padding:4px 14px;font-size:13px;font-weight:600}
+footer{text-align:center;color:#5f6a8f;font-size:12px;padding:10px 16px 28px}
+@media(max-width:560px){.hd{padding:22px 16px 4px}.grid{padding:16px;gap:16px}.jump-in{padding:10px 16px}}
 </style>
 </head>
 <body>
-<div class="w">
-  <div class="k"><i></i>${many ? 'Store videos · فيديوهات المتجر' : 'Store video · فيديو المتجر'}</div>
+<header class="hd">
+  <div class="k"><i></i>${kicker}</div>
   <h1>${esc(p.name)}</h1>
-  <div class="m"><span>${date}</span>${sub ? `<span>${sub}</span>` : ''}</div>
-  <div class="st">
-    <video id="v" controls playsinline preload="metadata"${first.p ? ` poster="${first.p}"` : ''}><source src="${first.f}" type="video/mp4"></video>
-    ${many ? `<div class="ctr" id="ctr">1 / ${C.length}</div>` : ''}
-  </div>
-  ${many ? `<div class="nav"><button id="prev" type="button">→ السابق</button><button id="next" type="button">التالي ←</button></div>
-  <div class="ls" id="ls">${C.map((c,i) => `<a class="it${i?'':' on'}" href="${c.f}" data-i="${i}"><span class="th"${c.p ? ` style="background-image:url('${c.p}')"` : ''}></span><span><b>مقطع ${i+1}</b>${c.d ? `<small>${dl(c.d)}</small>` : ''}</span><span class="go">${i?'':'يعمل الآن'}</span></a>`).join('')}</div>` : ''}
-  <div class="fb">إذا ما اشتغل الفيديو: <a href="${first.f}" id="direct">افتحه مباشرة</a></div>
-</div>
+  <div class="m"><span>${date}</span><span>${sub}</span>${total ? `<span>${dl(total)} total</span>` : ''}</div>
+</header>
+${N > 1 ? `<nav class="jump"><div class="jump-in">${items.map((c,i) => `<a href="#m${i+1}" data-i="${i}">${c.t === 'v' ? icV : icI}${labels[i]}</a>`).join('')}</div></nav>` : ''}
+<main class="grid">${items.map(card).join('')}
+</main>
 ${p.org ? `<footer>${esc(p.org)}</footer>` : ''}
-${many ? `<script>
+<div class="lb" id="lb"><img id="lbi" alt=""><button class="x" type="button" aria-label="Close">✕</button><button class="pv" type="button" aria-label="Previous">‹</button><button class="nx" type="button" aria-label="Next">›</button><div class="c" id="lbc"></div></div>
+<script>
 (function(){
-  var C=${JSON.stringify(C)},i=0,v=document.getElementById('v'),ctr=document.getElementById('ctr'),items=document.querySelectorAll('.it'),pv=document.getElementById('prev'),nx=document.getElementById('next'),dr=document.getElementById('direct');
-  function go(n,play){ if(n<0||n>=C.length)return; i=n; v.poster=C[i].p||''; v.src=C[i].f; v.style.aspectRatio=C[i].w+'/'+C[i].h; ctr.textContent=(i+1)+' / '+C.length; dr.href=C[i].f;
-    for(var k=0;k<items.length;k++){ items[k].className='it'+(k===i?' on':''); items[k].querySelector('.go').textContent=k===i?'يعمل الآن':''; }
-    pv.disabled=i===0; nx.disabled=i===C.length-1; if(play){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); } }
-  v.addEventListener('ended',function(){ if(i<C.length-1) go(i+1,true); });
-  pv.onclick=function(){go(i-1,true)}; nx.onclick=function(){go(i+1,true)};
-  for(var k=0;k<items.length;k++) items[k].onclick=function(e){ e.preventDefault(); go(+this.getAttribute('data-i'),true); window.scrollTo({top:0,behavior:'smooth'}); };
-  pv.disabled=true;
+  var C=${JSON.stringify(items.map((c,i) => ({ t:c.t, f:c.f, l:labels[i] })))};
+  var cards=document.querySelectorAll('.card'), vids=document.querySelectorAll('video');
+  // only one video plays at a time; when one ends, scroll to the next item
+  for(var k=0;k<vids.length;k++){
+    vids[k].addEventListener('play',function(){ for(var j=0;j<vids.length;j++) if(vids[j]!==this) vids[j].pause(); });
+    vids[k].addEventListener('ended',function(){ var c=this.closest('.card'), n=c&&c.nextElementSibling; if(n){ n.scrollIntoView({behavior:'smooth',block:'start'}); var v=n.querySelector('video'); if(v){ var pr=v.play(); if(pr&&pr.catch)pr.catch(function(){}); } } });
+  }
+  // photo lightbox (photos only)
+  var P=[]; for(var i=0;i<C.length;i++) if(C[i].t==='i') P.push(i);
+  var lb=document.getElementById('lb'), lbi=document.getElementById('lbi'), lbc=document.getElementById('lbc'), cur=-1;
+  function openLb(i){ cur=P.indexOf(i); if(cur<0)return; show(); lb.classList.add('on'); document.body.style.overflow='hidden'; }
+  function show(){ var c=C[P[cur]]; lbi.src=c.f; lbc.textContent=c.l+'  ·  '+(cur+1)+' / '+P.length; lb.querySelector('.pv').style.display=lb.querySelector('.nx').style.display=P.length>1?'':'none'; }
+  function close(){ lb.classList.remove('on'); document.body.style.overflow=''; lbi.removeAttribute('src'); }
+  function step(d){ cur=(cur+d+P.length)%P.length; show(); }
+  lb.querySelector('.x').onclick=close; lb.querySelector('.pv').onclick=function(){step(-1)}; lb.querySelector('.nx').onclick=function(){step(1)};
+  lb.addEventListener('click',function(e){ if(e.target===lb) close(); });
+  document.addEventListener('keydown',function(e){ if(!lb.classList.contains('on'))return; if(e.key==='Escape')close(); if(e.key==='ArrowLeft')step(-1); if(e.key==='ArrowRight')step(1); });
+  var sx=null; lb.addEventListener('touchstart',function(e){ sx=e.touches[0].clientX; },{passive:true});
+  lb.addEventListener('touchend',function(e){ if(sx===null)return; var dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>50) step(dx<0?1:-1); sx=null; });
+  var imgs=document.querySelectorAll('.media img'); for(var k=0;k<imgs.length;k++) imgs[k].onclick=function(){ openLb(+this.getAttribute('data-i')); };
+  var fs=document.querySelectorAll('.fs'); for(var k=0;k<fs.length;k++) fs[k].onclick=function(){
+    var i=+this.getAttribute('data-i'); if(C[i].t==='i') return openLb(i);
+    var v=cards[i].querySelector('video'); var r=v.requestFullscreen||v.webkitRequestFullscreen||v.webkitEnterFullscreen; if(r) r.call(v); };
+  // highlight the item in view
+  var chips=document.querySelectorAll('.jump a');
+  if(chips.length && 'IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var i=[].indexOf.call(cards,e.target); for(var j=0;j<chips.length;j++) chips[j].className=j===i?'on':''; chips[i].scrollIntoView({block:'nearest',inline:'center'}); } }); },{rootMargin:'-45% 0px -45% 0px'});
+    for(var k=0;k<cards.length;k++) io.observe(cards[k]);
+  }
 })();
-<\/script>` : ''}
+<\/script>
 </body>
 </html>`;
 }
 
 /* ---------- Upload ---------- */
 function prog(p, t){ $('progBar').style.width = Math.round(p*100)+'%'; $('progP').textContent = Math.round(p*100)+'%'; if (t) $('progT').textContent = t; }
-function lockUI(on){ busy = on; ['store','slug'].forEach(i => $(i).disabled = on); document.querySelectorAll('input[name=mode]').forEach(r => r.disabled = on); renderClips(); }
+function lockUI(on){ busy = on; ['store','slug','enh'].forEach(i => $(i).disabled = on); document.querySelectorAll('input[name=mode]').forEach(r => r.disabled = on); renderClips(); }
 
 async function go(){
-  const name = $('store').value.trim(), slug = $('slug').value.trim(), m = mode();
+  const name = $('store').value.trim(), slug = $('slug').value.trim(), m = mode(), enh = $('enh').checked;
   msg('upMsg'); $('res').classList.remove('on');
-  try{ await loadManifest(); }catch(e){ return msg('upMsg', e.status === 401 ? 'كود GitHub انتهى — حدّثه من الإعدادات' : 'خطأ: '+e.message, 'bad'); }
+  try{ await loadManifest(); }catch(e){ return msg('upMsg', e.status === 401 ? 'GitHub token expired — update it in Settings' : 'Error: '+e.message, 'bad'); }
 
-  // decide targets
-  let targets = []; // {slug, name, clips:[clip objects], existing, append}
+  let targets = [];
   if (m === 'playlist'){
     const ex = manifest.pages.find(p => p.slug === slug);
     let append = false;
     if (ex){
-      const r = await ask('الرابط موجود', `«${ex.name}» عنده ${ex.clips.length} فيديو على نفس الرابط. وش تبي تسوي؟`, [
-        { label:'إضافة الفيديوهات الجديدة له', value:'add' }, { label:'استبدال القديم بالجديد', value:'replace', cls:'ghost' }, { label:'إلغاء', value:null, cls:'ghost' } ]);
+      const r = await ask('Link already exists', `"${ex.name}" already has ${ex.clips.length} file(s) on this link. What would you like to do?`, [
+        { label:'Add the new files to it', value:'add' }, { label:'Replace the old files', value:'replace', cls:'ghost' }, { label:'Cancel', value:null, cls:'ghost' } ]);
       if (!r) return; append = r === 'add';
     }
     targets.push({ slug, name, clips, existing: ex, append });
@@ -440,72 +629,79 @@ async function go(){
     }
   }
 
-  lockUI(true); $('prog').classList.add('on'); prog(0, 'جاري الرفع…');
-  const totalBytes = clips.reduce((a,c) => a + c.file.size, 0); let doneBytes = 0;
+  lockUI(true); $('prog').classList.add('on'); prog(0, 'Preparing…');
+  const totalBytes = clips.reduce((a,c) => a + c.file.size, 0) || 1; let doneBytes = 0;
   try{
     const entries = [], made = [];
     let k = 0;
     for (const t of targets){
-      const old = t.existing;
-      const keep = t.append && old ? old.clips : [];
+      const old = t.existing, keep = t.append && old ? old.clips : [];
       let idx = keep.reduce((a,c) => Math.max(a, parseInt(c.f) || 0), 0);
       const newClips = [];
       for (const c of t.clips){
         k++; idx++;
-        prog(doneBytes/totalBytes*.9, clips.length > 1 ? `جاري رفع الفيديو ${k} من ${clips.length}…` : 'جاري رفع الفيديو…');
-        const sha = await blobXHR(await b64(c.file), p => prog((doneBytes + p*c.file.size)/totalBytes*.9));
-        doneBytes += c.file.size;
-        entries.push({ path:`${t.slug}/${idx}.mp4`, sha });
-        const rec = { f:`${idx}.mp4`, size:c.file.size, w:c.w, h:c.h, dur:Math.round(c.dur||0) };
-        if (c.poster){ entries.push({ path:`${t.slug}/${idx}.jpg`, sha: await blobXHR(await b64(c.poster)) }); rec.p = `${idx}.jpg`; }
+        const label = clips.length > 1 ? ` ${k} of ${clips.length}` : '';
+        let body = c.file, rec;
+        if (c.kind === 'i'){
+          if (enh){ prog(doneBytes/totalBytes*.9, `Enhancing photo${label}…`); await sleep(30);
+            try{ const r = await enhanceImage(c.file); body = r.blob; rec = { t:'i', f:`${idx}.jpg`, w:r.w, h:r.h }; }catch(e){ body = c.file; } }
+          if (!rec){ const ext = (c.file.name.match(/\.(jpe?g|png|webp|gif)$/i)?.[1] || 'jpg').toLowerCase().replace('jpeg','jpg'); rec = { t:'i', f:`${idx}.${ext}`, w:c.w, h:c.h }; }
+        } else rec = { t:'v', f:`${idx}.mp4`, w:c.w, h:c.h, dur:Math.round(c.dur||0) };
+        prog(doneBytes/totalBytes*.9, `Uploading ${c.kind === 'i' ? 'photo' : 'video'}${label}…`);
+        const sha = await blobXHR(await b64(body), p => prog((doneBytes + p*c.file.size)/totalBytes*.9));
+        doneBytes += c.file.size; rec.size = body.size;
+        entries.push({ path:`${t.slug}/${rec.f}`, sha });
+        if (c.thumb){ rec.p = `${idx}_t.jpg`; entries.push({ path:`${t.slug}/${rec.p}`, sha: await blobXHR(await b64(c.thumb)) }); }
         newClips.push(rec);
       }
-      if (old && !t.append){ // remove leftover files from the replaced page
+      if (old && !t.append){
         const used = new Set(newClips.flatMap(c => [c.f, c.p]));
         old.clips.flatMap(c => [c.f, c.p]).filter(f => f && !used.has(f)).forEach(f => entries.push({ path:`${t.slug}/${f}`, sha:null }));
       }
-      const page = { slug:t.slug, name:t.name, org:cfg.org, date:new Date().toISOString(), ver:Date.now().toString(36), clips:[...keep, ...newClips] };
+      const page = { slug:t.slug, name:t.name, org:cfg.org, enh, date:new Date().toISOString(), ver:Date.now().toString(36), clips:[...keep, ...newClips] };
       entries.push({ path:`${t.slug}/index.html`, sha: await textBlob(pageHTML(page)) });
       manifest.pages = [page, ...manifest.pages.filter(p => p.slug !== t.slug)];
       made.push(page);
     }
-    prog(.93, 'جاري إنشاء الصفحة…');
+    prog(.93, 'Creating page…');
     entries.push(await saveManifest());
-    await commit(entries, `Videos: ${name}`);
-    prog(1, 'تم ✓'); setTimeout(() => $('prog').classList.remove('on'), 800);
+    await commit(entries, `Media: ${name}`);
+    prog(1, 'Done ✓'); setTimeout(() => $('prog').classList.remove('on'), 800);
     showResult(made); renderLib();
     clips = []; slugTouched = false;
     lockUI(false); $('store').value = ''; $('slug').value = ''; renderClips();
     const ok = await Promise.all(made.map(p => waitLive(p))); setBadge(ok.every(Boolean));
   }catch(e){
-    msg('upMsg', 'ما تم الرفع: ' + (e.status === 401 ? 'كود GitHub انتهى — حدّثه من الإعدادات' : e.message), 'bad');
+    msg('upMsg', 'Upload failed: ' + (e.status === 401 ? 'GitHub token expired — update it in Settings' : e.message), 'bad');
     $('prog').classList.remove('on'); lockUI(false);
   }
 }
 async function waitLive(p){
-  const u = base() + p.slug + '/', end = Date.now() + 6*60e3;
+  const urls = [base() + p.slug + '/', `https://${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/${p.slug}/`], end = Date.now() + 6*60e3;
   while (Date.now() < end){
-    try{ const r = await fetch(u + '?t=' + Date.now(), { cache:'no-store' }); if (r.ok && (await r.text()).includes(p.ver)) return true; }catch(e){}
+    for (const u of urls){ try{ const r = await fetch(u + '?t=' + Date.now(), { cache:'no-store' }); if (r.ok && (await r.text()).includes(p.ver)) return true; }catch(e){} }
     await sleep(5000);
   }
   return false;
 }
-function setBadge(ok){ const b = $('resBadge'); if (!b) return; b.className = 'badge ' + (ok ? 'live' : 'wait'); b.textContent = ok ? 'شغّال ✓' : 'قاعد ينشر… دقيقة وجاهز'; }
+function setBadge(ok){ const b = $('resBadge'); if (!b) return; b.className = 'badge ' + (ok ? 'live' : 'wait'); b.textContent = ok ? 'Live ✓' : 'Publishing… ready in a minute'; }
 function mail(pages){
   const name = pages.length > 1 ? pages[0].name.replace(/ — \d+$/, '') : pages[0].name;
+  const hasV = pages.some(p => p.clips.some(c => (c.t||'v') === 'v')), hasI = pages.some(p => p.clips.some(c => c.t === 'i'));
+  const what = hasV && hasI ? 'videos and photos' : hasI ? (pages.length > 1 || pages[0].clips.length > 1 ? 'photos' : 'photo') : (pages.length > 1 || pages[0].clips.length > 1 ? 'videos' : 'video');
   const links = pages.map(p => (pages.length > 1 ? p.name + ':\n' : '') + base() + p.slug).join('\n\n');
-  return { s:`فيديو المتجر – ${name}`, b:`السلام عليكم،\n\n${pages.length > 1 ? 'روابط فيديوهات' : 'رابط فيديو'} المتجر: ${name}\n\n${links}\n\nاضغط على الرابط ويفتح الفيديو مباشرة.\n\nتحياتي`, links };
+  return { s:`Store ${what} – ${name}`, b:`Hello,\n\nPlease find the store ${what} for ${name} at the link below:\n\n${links}\n\nClick the link to open it directly.\n\nBest regards`, links };
 }
 function showResult(pages){
   const m = mail(pages), title = pages.length > 1 ? pages[0].name.replace(/ — \d+$/, '') : pages[0].name;
-  const info = pages.length === 1 && pages[0].clips.length > 1 ? `${pages[0].clips.length} فيديو في رابط واحد` : pages.length > 1 ? `${pages.length} روابط` : '';
-  $('res').innerHTML = `<div class="h"><b>${esc(title)}</b>${info ? `<span style="color:var(--ink2);font-size:13px">${info}</span>` : ''}<span class="badge wait" id="resBadge">قاعد ينشر…</span></div>
-    ${pages.map(p => `<div class="lnk"><a href="${base()+p.slug}" target="_blank" rel="noopener">${esc(short()+p.slug)}</a><button class="btn sm" data-c="${base()+p.slug}" type="button">نسخ</button></div>`).join('')}
+  const info = pages.length === 1 && pages[0].clips.length > 1 ? `${pages[0].clips.length} files on one link` : pages.length > 1 ? `${pages.length} links` : '';
+  $('res').innerHTML = `<div class="h"><b>${esc(title)}</b>${info ? `<span style="color:var(--ink2);font-size:13px">${info}</span>` : ''}<span class="badge wait" id="resBadge">Publishing…</span></div>
+    ${pages.map(p => `<div class="lnk"><a href="${base()+p.slug}" target="_blank" rel="noopener">${esc(short()+p.slug)}</a><button class="btn sm" data-c="${base()+p.slug}" type="button">Copy</button></div>`).join('')}
     <div class="acts">
-      <a class="btn sm" href="mailto:?subject=${encodeURIComponent(m.s)}&body=${encodeURIComponent(m.b)}">إرسال بالإيميل</a>
-      <a class="btn sm wa" href="https://wa.me/?text=${encodeURIComponent(title + '\n' + m.links)}" target="_blank" rel="noopener">واتساب</a>
-      ${pages.length > 1 ? `<button class="btn ghost sm" data-c="${esc(m.links)}" type="button">نسخ كل الروابط</button>` : ''}
-      <button class="btn ghost sm" data-c="${esc(m.s + '\n\n' + m.b)}" type="button">نسخ نص الإيميل</button>
+      <a class="btn sm" href="mailto:?subject=${encodeURIComponent(m.s)}&body=${encodeURIComponent(m.b)}">Send by email</a>
+      <a class="btn sm wa" href="https://wa.me/?text=${encodeURIComponent(title + '\n' + m.links)}" target="_blank" rel="noopener">WhatsApp</a>
+      ${pages.length > 1 ? `<button class="btn ghost sm" data-c="${esc(m.links)}" type="button">Copy all links</button>` : ''}
+      <button class="btn ghost sm" data-c="${esc(m.s + '\n\n' + m.b)}" type="button">Copy email text</button>
     </div>`;
   $('res').classList.add('on'); $('res').scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
@@ -514,14 +710,16 @@ function showResult(pages){
 function renderLib(){
   const q = $('q').value.trim().toLowerCase();
   const list = manifest.pages.filter(p => !q || (p.name+' '+p.slug).toLowerCase().includes(q));
-  $('lib').innerHTML = list.length ? list.map(p => { const c = p.clips[0] || {};
-    return `<div class="item">${c.p ? `<img loading="lazy" src="${base()+p.slug}/${c.p}?v=${p.ver}" alt="">` : '<span class="ph"></span>'}
+  $('lib').innerHTML = list.length ? list.map(p => { const c = p.clips[0] || {}, th = c.p || (c.t === 'i' ? c.f : '');
+    const nV = p.clips.filter(x => (x.t||'v') === 'v').length, nI = p.clips.length - nV;
+    const kind = [nV ? `${nV} video${nV>1?'s':''}` : '', nI ? `${nI} photo${nI>1?'s':''}` : ''].filter(Boolean).join(' + ');
+    return `<div class="item">${th ? `<img loading="lazy" src="https://${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/${p.slug}/${th}?v=${p.ver}" alt="">` : '<span class="ph"></span>'}
       <div class="info"><b>${esc(p.name)}</b><a href="${base()+p.slug}" target="_blank" rel="noopener">${esc(short()+p.slug)}</a>
-      <small>${new Date(p.date).toLocaleDateString('en-GB')} · ${p.clips.length > 1 ? p.clips.length + ' فيديو · ' : ''}${fmtMB(p.clips.reduce((a,c)=>a+(c.size||0),0))}</small></div>
-      <div class="a"><button class="btn sm" data-a="copy" data-s="${esc(p.slug)}">نسخ</button><button class="btn ghost sm" data-a="mail" data-s="${esc(p.slug)}">إيميل</button><button class="btn danger sm" data-a="del" data-s="${esc(p.slug)}">حذف</button></div></div>`; }).join('')
-    : `<div class="empty">${q ? 'ما فيه نتائج' : 'الروابط اللي تسويها بتظهر هنا'}</div>`;
+      <small>${new Date(p.date).toLocaleDateString('en-GB')} · ${kind} · ${fmtMB(p.clips.reduce((a,c)=>a+(c.size||0),0))}</small></div>
+      <div class="a"><button class="btn sm" data-a="copy" data-s="${esc(p.slug)}">Copy</button><button class="btn ghost sm" data-a="mail" data-s="${esc(p.slug)}">Email</button><button class="btn danger sm" data-a="del" data-s="${esc(p.slug)}">Delete</button></div></div>`; }).join('')
+    : `<div class="empty">${q ? 'No results' : 'Your links will appear here'}</div>`;
   const total = manifest.pages.reduce((a,p) => a + p.clips.reduce((b,c) => b + (c.size||0), 0), 0);
-  $('quotaTxt').textContent = `المساحة: ${fmtMB(total)} من ${LRI('1024 MB')}`;
+  $('quotaTxt').textContent = `Storage: ${fmtMB(total)} of ${LRI('1024 MB')}`;
   $('quotaBar').style.width = Math.min(100, total/SITE_LIMIT*100) + '%';
   $('quotaBar').style.background = total > SITE_LIMIT*.85 ? 'var(--bad)' : '';
 }
@@ -530,7 +728,7 @@ async function libAction(e){
   const p = manifest.pages.find(x => x.slug === b.dataset.s); if (!p) return;
   if (b.dataset.a === 'copy') return copy(base() + p.slug);
   if (b.dataset.a === 'mail'){ const m = mail([p]); location.href = `mailto:?subject=${encodeURIComponent(m.s)}&body=${encodeURIComponent(m.b)}`; return; }
-  const ok = await ask('حذف الرابط؟', `«${p.name}» بينحذف والرابط ما راح يفتح عند أحد.`, [{ label:'حذف', value:true, cls:'danger' }, { label:'إلغاء', value:false, cls:'ghost' }]);
+  const ok = await ask('Delete this link?', `"${p.name}" will be deleted and the link will stop working.`, [{ label:'Delete', value:true, cls:'danger' }, { label:'Cancel', value:false, cls:'ghost' }]);
   if (!ok) return;
   b.disabled = true; b.textContent = '…';
   try{
@@ -540,23 +738,26 @@ async function libAction(e){
     manifest.pages = manifest.pages.filter(x => x.slug !== p.slug);
     entries.push(await saveManifest());
     await commit(entries, `Delete ${p.slug}`);
-    renderLib(); toast('تم الحذف');
-  }catch(err){ toast('ما تم الحذف: ' + err.message); b.disabled = false; b.textContent = 'حذف'; }
+    renderLib(); toast('Deleted');
+  }catch(err){ toast('Delete failed: ' + err.message); b.disabled = false; b.textContent = 'Delete'; }
 }
 
 /* ---------- Boot ---------- */
 async function showApp(){
-  $('setupCard').classList.add('hidden'); $('upCard').classList.remove('hidden'); $('libCard').classList.remove('hidden');
+  $('upCard').classList.remove('hidden'); $('libCard').classList.remove('hidden');
   $('basePrefix').textContent = short();
+  if (!cfg.domain) msg('upMsg', 'Links currently show github and your account name. Add your own domain in Settings ⚙ to remove them.', 'info');
   validate(); renderLib();
-  try{ await loadManifest(); renderLib(); }catch(e){ if (e.status === 401) msg('upMsg','كود GitHub انتهى — حدّثه من الإعدادات','bad'); }
-  $('store').focus();
+  try{ await loadManifest(); renderLib(); }catch(e){ if (e.status === 401) msg('upMsg','GitHub token expired — update it in Settings','bad'); }
+  tryHttps();
 }
+function syncDns(){ const d = $('domain').value.trim(); $('dnsBox').classList.toggle('on', !!d); $('dnsCname').textContent = (cfg.owner || 'username').toLowerCase() + '.github.io'; }
 $('btnSetup').onclick = setup;
-$('btnSettings').onclick = () => { $('token').value = cfg.token||''; $('repo').value = cfg.repo||'v'; $('org').value = cfg.org||''; $('setupCard').classList.toggle('hidden'); $('btnSetup').textContent = cfg.owner ? 'حفظ' : 'تفعيل'; };
+$('btnSettings').onclick = () => { $('token').value = cfg.token||''; $('repo').value = cfg.repo||'v'; $('org').value = cfg.org||''; $('domain').value = cfg.domain||''; syncDns(); $('setupCard').classList.toggle('hidden'); };
+$('domain').oninput = syncDns;
 $('file').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
 $('clips').addEventListener('change', e => { if (e.target.type === 'file'){ addFiles(e.target.files); } });
-$('clips').addEventListener('click', e => { const x = e.target.closest('.x'); if (x && !busy){ clips.splice(+x.dataset.i, 1); renderClips(); } });
+$('clips').addEventListener('click', e => { const x = e.target.closest('.x'); if (x && !busy){ clips.splice(+x.dataset.i, 1); renderClips(); if (!clips.some(c => c.kind==='i' && !c.ok)) msg('upMsg'); } });
 ['dragenter','dragover'].forEach(t => document.addEventListener(t, e => { e.preventDefault(); $('drop').classList.add('over'); }));
 ['dragleave','drop'].forEach(t => document.addEventListener(t, e => { e.preventDefault(); $('drop').classList.remove('over'); if (t === 'drop' && e.dataTransfer?.files?.length && cfg.owner) addFiles(e.dataTransfer.files); }));
 $('store').oninput = () => { if (!slugTouched) $('slug').value = slugify($('store').value); validate(); };
@@ -567,7 +768,14 @@ $('btnGo').onclick = go;
 $('res').addEventListener('click', e => { const b = e.target.closest('[data-c]'); if (b) copy(b.dataset.c); });
 $('q').oninput = renderLib;
 $('lib').onclick = libAction;
-if (cfg.token && cfg.owner) showApp(); else $('setupCard').classList.remove('hidden');
+if (EMBED) $('tokWrap').classList.add('hidden');
+if (cfg.token && cfg.owner) showApp();
+else if (EMBED){ // first run: set everything up silently
+  $('token').value = embTok(); $('repo').value = 'v';
+  $('upCard').classList.remove('hidden'); msg('upMsg', 'Setting up for the first time… (under a minute)', 'info');
+  setup().then(() => { if (!cfg.owner) { $('setupCard').classList.remove('hidden'); msg('upMsg'); } });
+}
+else { $('setupCard').classList.remove('hidden'); syncDns(); }
 </script>
 </body>
 </html>
