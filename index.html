@@ -148,9 +148,8 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent2)}
       <li>Note: <code>video-links</code> · Expiration: <code>No expiration</code></li>
       <li>Tick <code>repo</code> → <b>Generate token</b> → copy it</li>
     </ol>
-    <div class="grid2">
+    <div>
       <div><label class="l">GitHub token</label><input type="password" id="token" placeholder="ghp_..." autocomplete="off" dir="ltr"></div>
-      <div><label class="l">Repository</label><input type="text" id="repo" value="v" dir="ltr"></div>
     </div></div>
     <label class="l">Custom domain <span class="hint">(removes GitHub and the account name from links)</span></label>
     <input type="text" id="domain" placeholder="e.g. storevideo.net" dir="ltr">
@@ -225,12 +224,14 @@ const $ = id => document.getElementById(id);
 const MAX_VMB = 75, MAX_IMB = 30, SITE_LIMIT = 1024 ** 3;
 const mem = {};
 const LS = { get:(k,d='')=>{ try{ return localStorage.getItem('vl_'+k) ?? d }catch(e){ return mem[k] ?? d } }, set:(k,v)=>{ try{ localStorage.setItem('vl_'+k,v) }catch(e){ mem[k]=v } } };
-let cfg = { token: LS.get('token') || embTok(), repo: LS.get('repo','v'), owner: LS.get('owner'), org: LS.get('org'), domain: LS.get('domain') };
+let cfg = { token: LS.get('token') || embTok(), repo: LS.get('repo','v'), branch: LS.get('branch','main'), owner: LS.get('owner'), org: LS.get('org'), domain: LS.get('domain') };
 let manifest = { pages: [] };
 let clips = []; // {file, kind:'v'|'i', thumb, thumbUrl, w, h, dur, ready, ok}
 let slugTouched = false, busy = false;
 
-const host = () => cfg.domain || `${cfg.owner.toLowerCase()}.github.io/${cfg.repo}`;
+const siteRepo = o => `${o}.github.io`;
+const ghio = () => `https://${cfg.owner.toLowerCase()}.github.io/`;
+const host = () => cfg.domain || `${cfg.owner.toLowerCase()}.github.io`;
 const base = () => `https://${host()}/`;
 const short = () => `${host()}/`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -260,6 +261,7 @@ function slugify(s){
 
 /* ---------- GitHub ---------- */
 const R = () => `/repos/${cfg.owner}/${cfg.repo}`;
+const BR = () => cfg.branch || 'main';
 async function gh(path, {method='GET', body}={}){
   const r = await fetch('https://api.github.com' + path, { method, cache:'no-store',
     headers:{ Authorization:'Bearer '+cfg.token, Accept:'application/vnd.github+json', ...(body?{'Content-Type':'application/json'}:{}) },
@@ -283,24 +285,24 @@ const textBlob = async s => (await gh(R()+'/git/blobs', {method:'POST', body:{co
 const b64 = blob => new Promise((res, rej) => { const f = new FileReader(); f.onload = () => res(String(f.result).split(',')[1]); f.onerror = rej; f.readAsDataURL(blob); });
 async function commit(entries, message){
   for (let a = 0; a < 3; a++){
-    const ref = await gh(R()+'/git/ref/heads/main');
+    const ref = await gh(R()+'/git/ref/heads/'+BR());
     const head = await gh(R()+'/git/commits/'+ref.object.sha);
     const tree = await gh(R()+'/git/trees', {method:'POST', body:{ base_tree:head.tree.sha, tree:entries.map(e => ({path:e.path, mode:'100644', type:'blob', sha:e.sha})) }});
     const c = await gh(R()+'/git/commits', {method:'POST', body:{ message, tree:tree.sha, parents:[ref.object.sha] }});
-    try{ await gh(R()+'/git/refs/heads/main', {method:'PATCH', body:{ sha:c.sha }}); return; }
+    try{ await gh(R()+'/git/refs/heads/'+BR(), {method:'PATCH', body:{ sha:c.sha }}); return; }
     catch(e){ if (e.status !== 422 || a === 2) throw e; await sleep(800); }
   }
 }
 async function loadManifest(){
   try{
-    const f = await gh(R()+'/contents/videos.json?ref=main');
+    const f = await gh(R()+'/contents/videos.json?ref='+BR());
     const bytes = Uint8Array.from(atob(f.content.replace(/\n/g,'')), c => c.charCodeAt(0));
     manifest = JSON.parse(new TextDecoder().decode(bytes));
     if (!Array.isArray(manifest.pages)) manifest.pages = [];
   }catch(e){ if (e.status === 404) manifest = { pages: [] }; else throw e; }
 }
 const saveManifest = async () => ({ path:'videos.json', sha: await textBlob(JSON.stringify(manifest, null, 1)) });
-async function fileExists(p){ try{ await gh(R()+'/contents/'+p+'?ref=main'); return true; }catch(e){ if (e.status === 404) return false; throw e; } }
+async function fileExists(p){ try{ await gh(R()+'/contents/'+p+'?ref='+BR()); return true; }catch(e){ if (e.status === 404) return false; throw e; } }
 
 /* ---------- Neutral pages (no names anywhere) ---------- */
 const plainPage = (title, text) => `<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${title}</title>
@@ -310,35 +312,34 @@ const plainPage = (title, text) => `<!doctype html><html lang="en" dir="ltr"><he
 /* ---------- Setup ---------- */
 async function setup(){
   const btn = $('btnSetup');
-  cfg.token = $('token').value.trim(); cfg.repo = ($('repo').value.trim() || 'v').replace(/[^A-Za-z0-9._-]/g,''); cfg.org = $('org').value.trim();
+  cfg.token = $('token').value.trim(); cfg.org = $('org').value.trim();
   const newDomain = $('domain').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
   if (!cfg.token) return msg('setupMsg','Paste your GitHub token','warn');
   if (newDomain && !/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(newDomain)) return msg('setupMsg','Invalid domain — example: storevideo.net','warn');
   btn.disabled = true; btn.textContent = 'Saving…'; msg('setupMsg');
   try{
-    cfg.owner = (await gh('/user')).login;
-    let exists = true; try{ await gh(R()) }catch(e){ if (e.status === 404) exists = false; else throw e; }
+    cfg.owner = (await gh('/user')).login; cfg.repo = siteRepo(cfg.owner);
+    let exists = true; try{ const r = await gh(R()); cfg.branch = r.default_branch || 'main'; }catch(e){ if (e.status === 404) exists = false; else throw e; }
     if (!exists){
-      await gh('/user/repos', {method:'POST', body:{ name:cfg.repo, auto_init:true, description:'Store media links' }});
-      for (let i = 0; i < 15; i++){ try{ await gh(R()+'/git/ref/heads/main'); break; }catch(e){ await sleep(1500); } }
+      await gh('/user/repos', {method:'POST', body:{ name:cfg.repo, auto_init:true, description:'Store media links' }}); cfg.branch = 'main';
+      for (let i = 0; i < 15; i++){ try{ await gh(R()+'/git/ref/heads/'+BR()); break; }catch(e){ await sleep(1500); } }
     }
     await loadManifest();
-    const entries = [
-      { path:'app/index.html', sha: await textBlob(SELF_HTML) },
+    const ours = !exists || await fileExists('videos.json'); // never overwrite an existing website's home page
+    const entries = [ { path:'app/index.html', sha: await textBlob(SELF_HTML) }, await saveManifest() ];
+    if (ours) entries.push(
       { path:'index.html', sha: await textBlob(plainPage('Store media', 'Please open the full link you received.')) },
       { path:'404.html', sha: await textBlob(plainPage('Link not found', 'Check the link or ask for a new one.')) },
       { path:'.nojekyll', sha: await textBlob('') },
-      { path:'robots.txt', sha: await textBlob('User-agent: *\nDisallow: /\n') },
-      await saveManifest()
-    ];
+      { path:'robots.txt', sha: await textBlob('User-agent: *\nDisallow: /\n') });
     if (newDomain) entries.push({ path:'CNAME', sha: await textBlob(newDomain + '\n') });
     else if (await fileExists('CNAME')) entries.push({ path:'CNAME', sha:null });
     await commit(entries, 'Setup');
     let pages = null; try{ pages = await gh(R()+'/pages') }catch(e){ if (e.status !== 404) throw e; }
-    if (!pages){ try{ await gh(R()+'/pages', {method:'POST', body:{ source:{ branch:'main', path:'/' } }}) }catch(e2){ if (e2.status !== 409) throw e2; } }
+    if (!pages){ try{ await gh(R()+'/pages', {method:'POST', body:{ source:{ branch:BR(), path:'/' } }}) }catch(e2){ if (e2.status !== 409) throw e2; } }
     if ((pages?.cname || '') !== newDomain){ try{ await gh(R()+'/pages', {method:'PUT', body:{ cname: newDomain || null }}) }catch(e){ console.warn(e); } }
     cfg.domain = newDomain;
-    ['token','repo','owner','org','domain'].forEach(k => LS.set(k, cfg[k])); msg('upMsg');
+    ['token','repo','branch','owner','org','domain'].forEach(k => LS.set(k, cfg[k])); msg('upMsg');
     LS.set('https_ok', '');
     $('setupCard').classList.add('hidden');
     showApp(); toast('Saved ✓');
@@ -677,7 +678,7 @@ async function go(){
   }
 }
 async function waitLive(p){
-  const urls = [base() + p.slug + '/', `https://${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/${p.slug}/`], end = Date.now() + 6*60e3;
+  const urls = [base() + p.slug + '/', ghio() + p.slug + '/'], end = Date.now() + 6*60e3;
   while (Date.now() < end){
     for (const u of urls){ try{ const r = await fetch(u + '?t=' + Date.now(), { cache:'no-store' }); if (r.ok && (await r.text()).includes(p.ver)) return true; }catch(e){} }
     await sleep(5000);
@@ -713,7 +714,7 @@ function renderLib(){
   $('lib').innerHTML = list.length ? list.map(p => { const c = p.clips[0] || {}, th = c.p || (c.t === 'i' ? c.f : '');
     const nV = p.clips.filter(x => (x.t||'v') === 'v').length, nI = p.clips.length - nV;
     const kind = [nV ? `${nV} video${nV>1?'s':''}` : '', nI ? `${nI} photo${nI>1?'s':''}` : ''].filter(Boolean).join(' + ');
-    return `<div class="item">${th ? `<img loading="lazy" src="https://${cfg.owner.toLowerCase()}.github.io/${cfg.repo}/${p.slug}/${th}?v=${p.ver}" alt="">` : '<span class="ph"></span>'}
+    return `<div class="item">${th ? `<img loading="lazy" src="${ghio()}${p.slug}/${th}?v=${p.ver}" alt="">` : '<span class="ph"></span>'}
       <div class="info"><b>${esc(p.name)}</b><a href="${base()+p.slug}" target="_blank" rel="noopener">${esc(short()+p.slug)}</a>
       <small>${new Date(p.date).toLocaleDateString('en-GB')} · ${kind} · ${fmtMB(p.clips.reduce((a,c)=>a+(c.size||0),0))}</small></div>
       <div class="a"><button class="btn sm" data-a="copy" data-s="${esc(p.slug)}">Copy</button><button class="btn ghost sm" data-a="mail" data-s="${esc(p.slug)}">Email</button><button class="btn danger sm" data-a="del" data-s="${esc(p.slug)}">Delete</button></div></div>`; }).join('')
@@ -753,7 +754,7 @@ async function showApp(){
 }
 function syncDns(){ const d = $('domain').value.trim(); $('dnsBox').classList.toggle('on', !!d); $('dnsCname').textContent = (cfg.owner || 'username').toLowerCase() + '.github.io'; }
 $('btnSetup').onclick = setup;
-$('btnSettings').onclick = () => { $('token').value = cfg.token||''; $('repo').value = cfg.repo||'v'; $('org').value = cfg.org||''; $('domain').value = cfg.domain||''; syncDns(); $('setupCard').classList.toggle('hidden'); };
+$('btnSettings').onclick = () => { $('token').value = cfg.token||''; $('org').value = cfg.org||''; $('domain').value = cfg.domain||''; syncDns(); $('setupCard').classList.toggle('hidden'); };
 $('domain').oninput = syncDns;
 $('file').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
 $('clips').addEventListener('change', e => { if (e.target.type === 'file'){ addFiles(e.target.files); } });
@@ -769,9 +770,10 @@ $('res').addEventListener('click', e => { const b = e.target.closest('[data-c]')
 $('q').oninput = renderLib;
 $('lib').onclick = libAction;
 if (EMBED) $('tokWrap').classList.add('hidden');
-if (cfg.token && cfg.owner) showApp();
-else if (EMBED){ // first run: set everything up silently
-  $('token').value = embTok(); $('repo').value = 'v';
+const needsSetup = !cfg.owner || (cfg.repo || '').toLowerCase() !== siteRepo(cfg.owner).toLowerCase();
+if (cfg.token && !needsSetup) showApp();
+else if (cfg.token || EMBED){ // first run, or moving from an older repo name: set up silently
+  $('token').value = cfg.token || embTok();
   $('upCard').classList.remove('hidden'); msg('upMsg', 'Setting up for the first time… (under a minute)', 'info');
   setup().then(() => { if (!cfg.owner) { $('setupCard').classList.remove('hidden'); msg('upMsg'); } });
 }
