@@ -469,10 +469,10 @@ async function setup(){
     if (!cfg.app) cfg.app = 'm-' + Math.random().toString(36).slice(2, 10);
     const entries = [ ...(await appEntries()), await saveManifest() ];
     if (await fileExists('app/index.html')) entries.push({ path:'app/index.html', sha:null });
+    entries.push({ path:'.nojekyll', sha: await textBlob('') });
     if (ours) entries.push(
       { path:'index.html', sha: await textBlob(plainPage('Store media', 'Please open the full link you received.')) },
       { path:'404.html', sha: await textBlob(plainPage('Link not found', 'Check the link or ask for a new one.')) },
-      { path:'.nojekyll', sha: await textBlob('') },
       { path:'robots.txt', sha: await textBlob('User-agent: *\nDisallow: /\n') });
     if (newDomain) entries.push({ path:'CNAME', sha: await textBlob(newDomain + '\n') });
     else if (await fileExists('CNAME')) entries.push({ path:'CNAME', sha:null });
@@ -1092,26 +1092,47 @@ async function go(){
     }
     prog(.93, 'Creating page…');
     entries.push(await saveManifest(), ...(await appEntries()));
+    entries.push({ path:'.nojekyll', sha: await textBlob('') });
     await commit(entries, `Media: ${name}`);
+    requestBuild();
     prog(1, 'Done ✓'); setTimeout(() => $('prog').classList.remove('on'), 800);
     showResult(made); renderLib();
     clips = []; slugTouched = false;
     lockUI(false); $('store').value = ''; $('slug').value = ''; renderClips();
-    const ok = await Promise.all(made.map(p => waitLive(p))); setBadge(ok.every(Boolean));
+    lastMade = made; const ok = await Promise.all(made.map(p => waitLive(p))); setBadge(ok.every(x => x.ok), (ok.find(x => !x.ok) || {}).err);
   }catch(e){
     msg('upMsg', 'Upload failed: ' + (e.status === 401 ? 'GitHub token expired — update it in Settings' : e.message), 'bad');
     $('prog').classList.remove('on'); lockUI(false);
   }
 }
-async function waitLive(p){
-  const urls = [base() + p.slug + '/', ghio() + p.slug + '/'], end = Date.now() + 6*60e3;
-  while (Date.now() < end){
-    for (const u of urls){ try{ const r = await fetch(u + '?t=' + Date.now(), { cache:'no-store' }); if (r.ok && (await r.text()).includes(p.ver)) return true; }catch(e){} }
-    await sleep(5000);
+function requestBuild(){ return gh(R()+'/pages/builds', { method:'POST' }).catch(() => null); }
+async function buildState(){ try{ const b = await gh(R()+'/pages/builds/latest'); return { status: b.status, err: b.error && b.error.message }; }catch(e){ return { status:'unknown' }; } }
+async function isLive(p){
+  for (const u of [base() + p.slug + '/', ghio() + p.slug + '/']){
+    try{ const r = await fetch(u + '?t=' + Date.now(), { cache:'no-store' }); if (r.ok && (!p.ver || (await r.text()).includes(p.ver))) return true; }catch(e){}
   }
   return false;
 }
-function setBadge(ok){ const b = $('resBadge'); if (!b) return; b.className = 'badge ' + (ok ? 'live' : 'wait'); b.textContent = ok ? 'Live ✓' : 'Publishing… ready in a minute'; }
+async function waitLive(p, minutes = 10){
+  const end = Date.now() + minutes*60e3; let retried = false;
+  while (Date.now() < end){
+    if (await isLive(p)) return { ok:true };
+    const b = await buildState();
+    if (b.status === 'errored'){
+      if (!retried){ retried = true; await requestBuild(); }
+      else return { ok:false, err: b.err || 'GitHub could not publish the page' };
+    }
+    await sleep(6000);
+  }
+  return { ok:false, err:'Still publishing — GitHub is slow right now' };
+}
+function setBadge(ok, err){ const b = $('resBadge'); if (!b) return;
+  if (ok){ b.className = 'badge live'; b.textContent = 'Live ✓ — ready to send'; return; }
+  b.className = 'badge wait'; b.style.color = 'var(--bad)'; b.textContent = '✕ Not live yet';
+  if (!$('resFix')){ b.insertAdjacentHTML('afterend', `<button class="btn sm" id="resFix" type="button">Fix now · إصلاح</button><small style="flex-basis:100%;color:var(--bad)">${esc(err || '')} — don’t send the link until it shows Live ✓</small>`);
+    $('resFix').onclick = async () => { $('resFix').disabled = true; $('resFix').textContent = 'Fixing…'; await requestBuild();
+      const r = await Promise.all(lastMade.map(p => waitLive(p, 8))); $('resFix').remove(); b.nextElementSibling && b.nextElementSibling.remove(); setBadge(r.every(x => x.ok), (r.find(x => !x.ok) || {}).err); }; } }
+let lastMade = [];
 function mail(pages){
   const name = pages.length > 1 ? pages[0].name.replace(/ — \d+$/, '') : pages[0].name;
   const hasV = pages.some(p => p.clips.some(c => (c.t||'v') === 'v')), hasI = pages.some(p => p.clips.some(c => c.t === 'i'));
@@ -1363,6 +1384,24 @@ function initComposer(){
 }
 
 /* ---------- Library ---------- */
+let libCheck = 0;
+async function checkLib(list){
+  const run = ++libCheck;
+  for (const p of list){
+    const live = await isLive({ slug: p.slug }); if (run !== libCheck) return;
+    const el = document.querySelector(`.lst[data-s="${CSS.escape(p.slug)}"]`); if (!el) continue;
+    el.innerHTML = live ? '<b style="color:var(--ok)">● Live</b>' : `<b style="color:var(--bad)">● Not live</b> <button class="btn sm" data-a="fix" data-s="${esc(p.slug)}" style="padding:2px 8px;font-size:12px">Fix · إصلاح</button>`;
+  }
+}
+async function fixLink(p, btn){
+  btn.disabled = true; btn.textContent = 'Fixing…';
+  try{
+    if (!(await fileExists(p.slug + '/index.html'))){ toast('This link’s files are missing — please upload it again'); btn.textContent = 'Upload again'; return; }
+    await commit([{ path:'.nojekyll', sha: await textBlob('') }], 'Republish'); await requestBuild();
+    const r = await waitLive({ slug: p.slug }, 8);
+    toast(r.ok ? 'Fixed ✓ — the link is live' : 'Not fixed yet: ' + r.err); renderLib();
+  }catch(e){ toast('Fix failed: ' + e.message); btn.disabled = false; btn.textContent = 'Fix · إصلاح'; }
+}
 function renderLib(){
   const q = $('q').value.trim().toLowerCase();
   const list = manifest.pages.filter(p => !q || (p.name+' '+p.slug).toLowerCase().includes(q));
@@ -1371,10 +1410,11 @@ function renderLib(){
     const kind = [nV ? `${nV} video${nV>1?'s':''}` : '', nI ? `${nI} photo${nI>1?'s':''}` : ''].filter(Boolean).join(' + ');
     return `<div class="item">${th ? `<img loading="lazy" src="${ghio()}${p.slug}/${th}?v=${p.ver}" alt="">` : '<span class="ph"></span>'}
       <div class="info"><b>${esc(p.name)}</b><a href="${base()+p.slug}" target="_blank" rel="noopener">${esc(short()+p.slug)}</a>
-      <small>${new Date(p.date).toLocaleDateString('en-GB')} · ${kind} · ${fmtMB(p.clips.reduce((a,c)=>a+(c.size||0),0))}</small></div>
+      <small>${new Date(p.date).toLocaleDateString('en-GB')} · ${kind} · ${fmtMB(p.clips.reduce((a,c)=>a+(c.size||0),0))} · <span class="lst" data-s="${esc(p.slug)}">checking…</span></small></div>
       <div class="a"><button class="btn sm" data-a="copy" data-s="${esc(p.slug)}">Copy</button><button class="btn ghost sm" data-a="mail" data-s="${esc(p.slug)}">Email</button><button class="btn danger sm" data-a="del" data-s="${esc(p.slug)}">Delete</button></div></div>`; }).join('')
     : `<div class="empty">${q ? 'No results' : 'Your links will appear here'}</div>`;
   const total = manifest.pages.reduce((a,p) => a + p.clips.reduce((b,c) => b + (c.size||0), 0), 0);
+  checkLib(list.slice(0, 30));
   $('quotaTxt').textContent = `Storage: ${fmtMB(total)} of ${LRI('1024 MB')}`;
   $('quotaBar').style.width = Math.min(100, total/SITE_LIMIT*100) + '%';
   $('quotaBar').style.background = total > SITE_LIMIT*.85 ? 'var(--bad)' : '';
@@ -1383,6 +1423,7 @@ async function libAction(e){
   const b = e.target.closest('button[data-a]'); if (!b) return;
   const p = manifest.pages.find(x => x.slug === b.dataset.s); if (!p) return;
   if (b.dataset.a === 'copy') return copy(base() + p.slug);
+  if (b.dataset.a === 'fix') return fixLink(p, b);
   if (b.dataset.a === 'mail'){ openComposer([p]); return; }
   const ok = await ask('Delete this link?', `"${p.name}" will be deleted and the link will stop working.`, [{ label:'Delete', value:true, cls:'danger' }, { label:'Cancel', value:false, cls:'ghost' }]);
   if (!ok) return;
